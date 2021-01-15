@@ -14,7 +14,7 @@ func TestProcessDirectory(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Equal(t, 6, len(methods1))
+	require.Equal(t, 7, len(methods1))
 
 	require.Equal(t, 1, len(methods2))
 

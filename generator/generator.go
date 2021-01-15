@@ -2,6 +2,7 @@ package generator
 
 import (
 	"bytes"
+	"fmt"
 	"go/ast"
 	"golang.org/x/tools/imports"
 	"path"
@@ -41,6 +42,7 @@ func NewFileTemplate(ast []*ast.FuncDecl, pkg *ast.Package, targetInterface stri
 			for i, arg := range v.Type.Params.List {
 				identifierTemplate := IdentifierTemplate{}
 				identifierTemplate.HasNext = (i + 1) != len(v.Type.Params.List)
+				identifierTemplate.Type = buildTypeFromExpr(arg.Type)
 				if len(arg.Names) > 0 {
 					identifierTemplate.Name = arg.Names[0].Name
 					for _, name := range arg.Names[1:] {
@@ -54,6 +56,7 @@ func NewFileTemplate(ast []*ast.FuncDecl, pkg *ast.Package, targetInterface stri
 			for i, arg := range v.Type.Results.List {
 				identifierTemplate := IdentifierTemplate{}
 				identifierTemplate.HasNext = (i + 1) != len(v.Type.Results.List)
+				identifierTemplate.Type = buildTypeFromExpr(arg.Type)
 				if len(arg.Names) > 0 {
 					identifierTemplate.Name = arg.Names[0].Name
 					for _, name := range arg.Names[1:] {
@@ -84,6 +87,8 @@ func (f *FileTemplate) Generate(targetDirectory string) (string, error) {
 	}
 
 	b := buf.Bytes()
+
+	fmt.Println(string(b))
 
 	result, err := imports.Process(path.Join(targetDirectory, f.FileName+".go"), b, nil)
 
