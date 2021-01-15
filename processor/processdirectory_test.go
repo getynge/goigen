@@ -1,25 +1,23 @@
 package processor
 
-import "testing"
+import (
+	"github.com/stretchr/testify/require"
+	"testing"
+)
 
 func TestProcessDirectory(t *testing.T) {
-	methods1, _, err := ProcessDirectory("testfiles", "*Example")
+	methods1, pkg1, err := ProcessDirectory("testfiles", "*Example")
 
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
-	methods2, _, err := ProcessDirectory("testfiles", "Example")
+	methods2, pkg2, err := ProcessDirectory("testfiles", "Example")
 
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
-	if len(methods1) != 2 {
-		t.Fatalf("expected 2 methods, got %d\n", len(methods1))
-	}
+	require.Equal(t, 6, len(methods1))
 
-	if len(methods2) != 1 {
-		t.Fatalf("expected 1 method, got %d\n", len(methods2))
-	}
+	require.Equal(t, 1, len(methods2))
+
+	require.Equal(t, "testfiles", pkg1.Name)
+	require.Equal(t, "testfiles", pkg2.Name)
 }

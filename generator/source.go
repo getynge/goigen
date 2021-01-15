@@ -1,6 +1,6 @@
 package generator
 
-const template = `//go:generate mockgen -source={{.FileName}}.go -package=mock_{{.FileName}} -destination=mock_{{.FileName}}/mock.go
+const source = `//go:generate mockgen -source={{.FileName}}.go -package=mock_{{.FileName}} -destination=mock_{{.FileName}}/mock.go
 package {{.Package}}
 
 type {{.TargetInterface}} interface {

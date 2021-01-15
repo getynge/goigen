@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"goigen/generator"
 	"goigen/processor"
 	"log"
 	"os"
@@ -25,4 +26,12 @@ func main() {
 		l.Fatal(err)
 	}
 
+	fileTemplate := generator.NewFileTemplate(methods, pkg, targetInterface)
+	text, err := fileTemplate.Generate(directory)
+
+	if err != nil {
+		l.Fatal(err)
+	}
+
+	fmt.Println(text)
 }

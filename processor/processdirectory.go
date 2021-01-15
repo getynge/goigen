@@ -24,5 +24,5 @@ func ProcessDirectory(directory, targetStruct string) (methods []*ast.FuncDecl, 
 		}
 	}
 
-	return methods, nil, nil
+	return methods, pkg, nil
 }
