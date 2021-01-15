@@ -1,4 +1,4 @@
-module goigen
+module github.com/getynge/goigen
 
 go 1.15
 

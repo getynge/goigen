@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
-	"goigen/generator"
-	"goigen/processor"
+	"github.com/getynge/goigen/generator"
+	"github.com/getynge/goigen/processor"
+	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
+	"path"
 )
 
 func main() {
@@ -33,5 +36,18 @@ func main() {
 		l.Fatal(err)
 	}
 
-	fmt.Println(text)
+	fullPath := path.Join(directory, fileTemplate.FileName+".go")
+	err = ioutil.WriteFile(fullPath, []byte(text), 0755)
+
+	if err != nil {
+		l.Fatal(err)
+	}
+
+	cmd := exec.Command("go", "generate", fullPath)
+
+	_, err = cmd.Output()
+
+	if err != nil {
+		l.Printf("Failed to generate mocks due to error: %s\nPlease generate your mocks manually", err.Error())
+	}
 }
