@@ -2,7 +2,6 @@ package generator
 
 import (
 	"bytes"
-	"fmt"
 	"go/ast"
 	"go/types"
 	"golang.org/x/tools/imports"
@@ -26,15 +25,26 @@ type MethodTemplate struct {
 type FileTemplate struct {
 	FileName        string // name of file without extension or directory
 	Package         string
+	MockPackage     string
+	MockDirectory   string
 	TargetInterface string
 	Methods         []MethodTemplate
 }
 
-func NewFileTemplate(ast []*ast.FuncDecl, pkg *ast.Package, targetInterface string) (ft *FileTemplate) {
+func NewFileTemplate(ast []*ast.FuncDecl, pkg *ast.Package, targetInterface, mockDirectory, filePrefix string) (ft *FileTemplate) {
+	mockBase := path.Base(mockDirectory)
+
 	ft = &FileTemplate{}
-	ft.FileName = fmt.Sprintf("generated_%s", strings.ToLower(targetInterface))
+	ft.FileName = filePrefix + strings.ToLower(targetInterface)
 	ft.Package = pkg.Name
 	ft.TargetInterface = targetInterface
+	ft.MockDirectory = mockDirectory
+
+	if mockBase == "." {
+		ft.MockPackage = pkg.Name
+	} else {
+		ft.MockPackage = mockBase
+	}
 
 	for _, v := range ast {
 		methodTemplate := MethodTemplate{}
